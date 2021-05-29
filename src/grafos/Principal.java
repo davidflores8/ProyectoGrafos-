@@ -5,6 +5,9 @@
  */
 package grafos;
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author David
@@ -30,6 +33,7 @@ public class Principal extends javax.swing.JFrame {
     private void initComponents() {
 
         panel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -58,21 +62,36 @@ public class Principal extends javax.swing.JFrame {
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 565, Short.MAX_VALUE)
+            .addGap(0, 545, Short.MAX_VALUE)
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 419, Short.MAX_VALUE)
         );
 
+        jButton1.setText("Imprimir lista");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Menu");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Crear Arista");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("jMenuItem2");
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setText("Eliminar Arista");
         jMenu1.add(jMenuItem2);
 
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setText("Limpiar");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,15 +122,21 @@ public class Principal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(227, 227, 227)
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addGap(144, 144, 144)
                 .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -128,14 +153,39 @@ public class Principal extends javax.swing.JFrame {
         int x, y;
         x=evt.getX();
         y=evt.getY();
+        System.out.println("X - "+x+"\nY - "+y);
         figuras.dibujarCirculo(panel.getGraphics(), x, y, Integer.toString(cantidad));
+        pares.add(new Par(new Nodo(x,y,cantidad)));
         cantidad++;
+        
     }//GEN-LAST:event_panelMousePressed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
         panel.repaint();
+        cantidad=0;
+        pares.clear();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       System.out.println(pares.toString()); // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        String nodo1 = JOptionPane.showInputDialog(this,"Ingrese el primer vertice");
+        int n1 = Integer.parseInt(nodo1);
+        System.out.println("Nodo "+ n1);
+        while(!nodoExiste(n1)){
+            nodo1 = JOptionPane.showInputDialog(this,"Ingrese el un nodo valido");
+            n1 = Integer.parseInt(nodo1);
+            System.out.println("Despues de que lo pide "+n1);
+          
+        }
+        String nodo2 = JOptionPane.showInputDialog(this,"Ingrese el segundo vertice");
+        int n2 = Integer.parseInt(nodo2);
+        System.out.println("Nodo 2 "+ n2);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,8 +222,24 @@ public class Principal extends javax.swing.JFrame {
             }
         });
     }
+    
+    public boolean nodoExiste(int indice){
+        boolean existe=true;
+        for (int i = 0; i < pares.size(); i++) {
+            if(pares.get(i).getNodo1().getIndice()==indice){
+                System.out.println("Indice del nodo "+pares.get(i).getNodo1().getIndice());
+                System.out.println("Indice que mando "+indice);
+                existe=true;
+            }
+            else{
+                existe=false;
+            }
+        }
+        return existe;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -189,6 +255,6 @@ public class Principal extends javax.swing.JFrame {
 
 Figuras figuras=new Figuras();
 int cantidad=0;
-
+ArrayList <Par> pares = new ArrayList();
 
 }
