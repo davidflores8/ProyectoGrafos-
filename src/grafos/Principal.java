@@ -37,13 +37,14 @@ public class Principal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Principal");
@@ -87,10 +88,6 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setText("Eliminar Arista");
-        jMenu1.add(jMenuItem2);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setText("Limpiar");
@@ -136,6 +133,22 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem6);
+
+        jMenuItem8.setText("Buscar camino");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem8);
+
+        jMenuItem9.setText("Ciclos");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem9);
 
         jMenuBar1.add(jMenu2);
 
@@ -184,43 +197,9 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_panelMousePressed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-        panel.repaint();
-        indice=0;
-        pares.clear();
-        vertices.clear();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.out.println("Relax todavia no esta");
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        String v1 = JOptionPane.showInputDialog(this,"Ingrese el primer vértice");
-        int n1 = Integer.parseInt(v1);
-        while(!nodoExiste(n1)){
-            v1 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
-            n1 = Integer.parseInt(v1);
-        }
-        String v2 = JOptionPane.showInputDialog(this,"Ingrese el segundo vértice");
-        int n2 = Integer.parseInt(v2);
-        while(!nodoExiste(n2) || n1==n2){
-            v2 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
-            n2 = Integer.parseInt(v2);
-        }
-        if(!validacionArista(n1,n2))
-        {        
-            Nodo nodo1 = obtenerNodo(n1);
-            Nodo nodo2 = obtenerNodo(n2);
-            figuras.dibujarLinea(panel.getGraphics(), nodo1.getCoordenadaX(),nodo1.getCoordenadaY(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY());
-            pares.add(new Par(nodo1, nodo2));
-        }
-        else{
-            JOptionPane.showMessageDialog(this, "Ya existe una arista en ambos vértices");
-        }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
@@ -265,6 +244,62 @@ public class Principal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "El vértice con menor grado es "+vertice+" y su grado es "+gradoMenor+".");
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        panel.repaint();
+        indice=0;
+        pares.clear();
+        vertices.clear();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        String v1 = JOptionPane.showInputDialog(this,"Ingrese el primer vértice");
+        int n1 = Integer.parseInt(v1);
+        while(!nodoExiste(n1)){
+            v1 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n1 = Integer.parseInt(v1);
+        }
+        String v2 = JOptionPane.showInputDialog(this,"Ingrese el segundo vértice");
+        int n2 = Integer.parseInt(v2);
+        while(!nodoExiste(n2) || n1==n2){
+            v2 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n2 = Integer.parseInt(v2);
+        }
+        if(!validacionArista(n1,n2))
+        {
+            Nodo nodo1 = obtenerNodo(n1);
+            Nodo nodo2 = obtenerNodo(n2);
+            figuras.dibujarLinea(panel.getGraphics(), nodo1.getCoordenadaX(),nodo1.getCoordenadaY(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY());
+            pares.add(new Par(nodo1, nodo2));
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Ya existe una arista en ambos vértices");
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+        String nodo1=JOptionPane.showInputDialog(this,"Ingrese el índice del vértice: ");
+        int n1 = Integer.parseInt(nodo1);
+        while(!nodoExiste(n1)){
+            nodo1 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n1 = Integer.parseInt(nodo1);
+        }
+        String nodo2=JOptionPane.showInputDialog(this,"Ingrese el índice del vértice: ");
+        int n2 = Integer.parseInt(nodo2);
+        while(!nodoExiste(n2)){
+            nodo2 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n2 = Integer.parseInt(nodo2);
+        }
+        ArrayList lista = new ArrayList();
+        camino(n1,n2,new ArrayList());
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -299,6 +334,20 @@ public class Principal extends javax.swing.JFrame {
             new Principal().setVisible(true);
             }
         });
+    }
+    
+    public boolean camino (int nodo1, int nodo2, ArrayList lista){
+        if(nodo2<vertices.size() && nodo1<vertices.size()){
+            for (int i = nodo1; i < vertices.size()-1; i++) {
+            if(validacionArista(nodo1, i+1)){
+                lista.add(new Par(new Nodo(nodo1), new Nodo(i+1)));
+                camino(i+1,i+2,lista);
+                }
+            }
+            
+        }
+        System.out.println(lista.toString());
+        return false;
     }
     
     public int gradoVertice(int n1){
@@ -376,12 +425,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 

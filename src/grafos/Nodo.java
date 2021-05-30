@@ -16,6 +16,12 @@ public class Nodo {
 
     public Nodo() {
     }
+
+    public Nodo(int indice) {
+        this.indice = indice;
+    }
+    
+    
     
     public Nodo(int coordenadaX, int coordenadaY, int indice) {
         this.coordenadaX = coordenadaX;
@@ -49,7 +55,7 @@ public class Nodo {
 
     @Override
     public String toString() {
-        return "Nodo{" + "coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", indice=" + indice + '}';
+        return "Nodo{ indice=" + indice + '}';
     }
     
     
