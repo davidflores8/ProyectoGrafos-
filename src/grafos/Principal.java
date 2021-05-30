@@ -41,6 +41,7 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
 
@@ -112,10 +113,28 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem4);
 
-        jMenuItem5.setText("jMenuItem5");
+        jMenuItem7.setText("Grado de un vértice");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem7);
+
+        jMenuItem5.setText("Suma de los grados de los vértices");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem5);
 
-        jMenuItem6.setText("jMenuItem6");
+        jMenuItem6.setText("Grado menor entre los vértices");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem6);
 
         jMenuBar1.add(jMenu2);
@@ -191,33 +210,60 @@ public class Principal extends javax.swing.JFrame {
             v2 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
             n2 = Integer.parseInt(v2);
         }
-        Nodo nodo1 = obtenerNodo(n1);
-        Nodo nodo2 = obtenerNodo(n2);
-        figuras.dibujarLinea(panel.getGraphics(), nodo1.getCoordenadaX(),nodo1.getCoordenadaY(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY());
-        pares.add(new Par(nodo1, nodo2));
+        if(!validacionArista(n1,n2))
+        {        
+            Nodo nodo1 = obtenerNodo(n1);
+            Nodo nodo2 = obtenerNodo(n2);
+            figuras.dibujarLinea(panel.getGraphics(), nodo1.getCoordenadaX(),nodo1.getCoordenadaY(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY());
+            pares.add(new Par(nodo1, nodo2));
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Ya existe una arista en ambos vértices");
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
-        int grado=0;
-        int aux=0;
-        for (int i = 0; i <indice-1; i++) {
-            for (int j = 0; j <pares.size(); j++) {
-                Par par = pares.get(j);
-                Nodo nodo1=par.getNodo1();
-                Nodo nodo2=par.getNodo2();
-                if(nodo1.getIndice()==i || nodo2.getIndice()==i){
-                    aux++;
-                }
-            }
-            if(aux>grado){
-                grado=aux;
-                aux=0;
-            }
-            aux=0;
-        }
-        JOptionPane.showMessageDialog(this, "El grado del grafo es: "+grado);
+        JOptionPane.showMessageDialog(this, "El grado del grafo es: "+gradoGrafo());
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        int grado=0;
+        if(pares.size()>0){
+            for (int i = 0; i < vertices.size(); i++) {
+                grado=grado+gradoVertice(i);
+            }
+            JOptionPane.showMessageDialog(this, "La suma de los grados de todos los vértices es: "+grado);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "No hay aristas en el grafo");
+        }
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        // TODO add your handling code here:
+        String nodo=JOptionPane.showInputDialog(this,"Ingrese el índice del vértice: ");
+        int n1 = Integer.parseInt(nodo);
+        while(!nodoExiste(n1)){
+            nodo = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n1 = Integer.parseInt(nodo);
+        }
+        JOptionPane.showMessageDialog(this, "El grado del vértice "+n1+" es de: "+gradoVertice(n1));
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        int gradoMenor=10000;
+        int vertice=0;
+        for (int i = 0; i <vertices.size(); i++) {
+            if(gradoVertice(i)<gradoMenor){
+                gradoMenor = gradoVertice(i);
+                vertice = vertices.get(i).getIndice();
+            }
+        }
+        JOptionPane.showMessageDialog(this, "El vértice con menor grado es "+vertice+" y su grado es "+gradoMenor+".");
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,9 +296,35 @@ public class Principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Principal().setVisible(true);
+            new Principal().setVisible(true);
             }
         });
+    }
+    
+    public int gradoVertice(int n1){
+        int grado=0;
+        for (int i = 0; i < pares.size(); i++) {
+            int nodo1 = pares.get(i).getNodo1().getIndice();
+            int nodo2 = pares.get(i).getNodo2().getIndice();
+            if(nodo1==n1 || nodo2==n1){
+                grado++;
+            }
+        }
+        return grado;
+    }
+            
+    
+    public boolean validacionArista(int v1, int v2){
+        boolean existeArista=false;
+        for (int i = 0; i < pares.size(); i++) {
+            int n1=pares.get(i).getNodo1().getIndice();
+            int n2=pares.get(i).getNodo2().getIndice();
+            if((v1==n1 && v2==n2) || (v1==n2 && v2==n1)){
+                existeArista=true;
+                break;
+            }
+        }
+        return existeArista;
     }
     
     public Nodo obtenerNodo(int indice){
@@ -276,6 +348,27 @@ public class Principal extends javax.swing.JFrame {
         }
         return existe;
     }
+    
+    public int gradoGrafo(){
+        int grado=0;
+        int aux=0;
+        for (int i = 0; i <indice-1; i++) {
+            for (int j = 0; j <pares.size(); j++) {
+                Par par = pares.get(j);
+                Nodo nodo1=par.getNodo1();
+                Nodo nodo2=par.getNodo2();
+                if(nodo1.getIndice()==i || nodo2.getIndice()==i){
+                    aux++;
+                }
+            }
+            if(aux>grado){
+                grado=aux;
+                aux=0;
+            }
+            aux=0;
+        }
+        return grado;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -288,6 +381,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 
