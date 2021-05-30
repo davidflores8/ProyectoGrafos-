@@ -38,7 +38,7 @@ public class Figuras {
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
         BasicStroke stroke = new BasicStroke(2);
         ((Graphics2D)g).setStroke(stroke);         
-        ((Graphics2D)g).drawLine(x1+2, y1+2, x2+2, y2+2);
+        ((Graphics2D)g).drawLine(x1+10, y1+10, x2+10, y2+10);
     }
     
     

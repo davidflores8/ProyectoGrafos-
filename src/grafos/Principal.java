@@ -62,14 +62,14 @@ public class Principal extends javax.swing.JFrame {
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 545, Short.MAX_VALUE)
+            .addGap(0, 577, Short.MAX_VALUE)
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 419, Short.MAX_VALUE)
         );
 
-        jButton1.setText("Imprimir lista");
+        jButton1.setText("Datos");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -104,7 +104,12 @@ public class Principal extends javax.swing.JFrame {
 
         jMenu2.setText("Opciones");
 
-        jMenuItem4.setText("jMenuItem4");
+        jMenuItem4.setText("Ver grado del grafo");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuItem5.setText("jMenuItem5");
@@ -189,8 +194,30 @@ public class Principal extends javax.swing.JFrame {
         Nodo nodo1 = obtenerNodo(n1);
         Nodo nodo2 = obtenerNodo(n2);
         figuras.dibujarLinea(panel.getGraphics(), nodo1.getCoordenadaX(),nodo1.getCoordenadaY(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY());
-        System.out.println("Que recio");
+        pares.add(new Par(nodo1, nodo2));
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+        int grado=0;
+        int aux=0;
+        for (int i = 0; i <indice-1; i++) {
+            for (int j = 0; j <pares.size(); j++) {
+                Par par = pares.get(j);
+                Nodo nodo1=par.getNodo1();
+                Nodo nodo2=par.getNodo2();
+                if(nodo1.getIndice()==i || nodo2.getIndice()==i){
+                    aux++;
+                }
+            }
+            if(aux>grado){
+                grado=aux;
+                aux=0;
+            }
+            aux=0;
+        }
+        JOptionPane.showMessageDialog(this, "El grado del grafo es: "+grado);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
