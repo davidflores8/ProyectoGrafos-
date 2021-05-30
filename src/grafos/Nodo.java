@@ -14,6 +14,9 @@ public class Nodo {
     int coordenadaY;
     int indice;
 
+    public Nodo() {
+    }
+    
     public Nodo(int coordenadaX, int coordenadaY, int indice) {
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;

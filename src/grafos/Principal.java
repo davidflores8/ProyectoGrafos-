@@ -153,38 +153,43 @@ public class Principal extends javax.swing.JFrame {
         int x, y;
         x=evt.getX();
         y=evt.getY();
-        System.out.println("X - "+x+"\nY - "+y);
-        figuras.dibujarCirculo(panel.getGraphics(), x, y, Integer.toString(cantidad));
-        pares.add(new Par(new Nodo(x,y,cantidad)));
-        cantidad++;
+//        System.out.println("X - "+x+"\nY - "+y);
+        figuras.dibujarCirculo(panel.getGraphics(), x, y, Integer.toString(indice));
+        vertices.add(new Nodo(x,y,indice));
+        indice++;
         
     }//GEN-LAST:event_panelMousePressed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
         panel.repaint();
-        cantidad=0;
+        indice=0;
         pares.clear();
+        vertices.clear();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       System.out.println(pares.toString()); // TODO add your handling code here:
+        System.out.println("Relax todavia no esta");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        String nodo1 = JOptionPane.showInputDialog(this,"Ingrese el primer vertice");
-        int n1 = Integer.parseInt(nodo1);
-        System.out.println("Nodo "+ n1);
+        String v1 = JOptionPane.showInputDialog(this,"Ingrese el primer vértice");
+        int n1 = Integer.parseInt(v1);
         while(!nodoExiste(n1)){
-            nodo1 = JOptionPane.showInputDialog(this,"Ingrese el un nodo valido");
-            n1 = Integer.parseInt(nodo1);
-            System.out.println("Despues de que lo pide "+n1);
-          
+            v1 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n1 = Integer.parseInt(v1);
         }
-        String nodo2 = JOptionPane.showInputDialog(this,"Ingrese el segundo vertice");
-        int n2 = Integer.parseInt(nodo2);
-        System.out.println("Nodo 2 "+ n2);
+        String v2 = JOptionPane.showInputDialog(this,"Ingrese el segundo vértice");
+        int n2 = Integer.parseInt(v2);
+        while(!nodoExiste(n2) || n1==n2){
+            v2 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n2 = Integer.parseInt(v2);
+        }
+        Nodo nodo1 = obtenerNodo(n1);
+        Nodo nodo2 = obtenerNodo(n2);
+        figuras.dibujarLinea(panel.getGraphics(), nodo1.getCoordenadaX(),nodo1.getCoordenadaY(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY());
+        System.out.println("Que recio");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
@@ -223,16 +228,23 @@ public class Principal extends javax.swing.JFrame {
         });
     }
     
-    public boolean nodoExiste(int indice){
-        boolean existe=true;
-        for (int i = 0; i < pares.size(); i++) {
-            if(pares.get(i).getNodo1().getIndice()==indice){
-                System.out.println("Indice del nodo "+pares.get(i).getNodo1().getIndice());
-                System.out.println("Indice que mando "+indice);
-                existe=true;
+    public Nodo obtenerNodo(int indice){
+        Nodo nodo = new Nodo();
+        for (int i = 0; i < vertices.size(); i++) {
+            if(vertices.get(i).getIndice()==indice){
+                nodo = vertices.get(i);
+                break;
+                
             }
-            else{
-                existe=false;
+        }
+       return nodo;
+    }
+    
+    public boolean nodoExiste(int indice){
+        boolean existe=false;
+        for (int i = 0; i < vertices.size(); i++) {
+            if(vertices.get(i).getIndice()==indice){
+                existe=true;
             }
         }
         return existe;
@@ -254,7 +266,8 @@ public class Principal extends javax.swing.JFrame {
 
 
 Figuras figuras=new Figuras();
-int cantidad=0;
+int indice=0;
 ArrayList <Par> pares = new ArrayList();
+ArrayList <Nodo> vertices = new ArrayList();
 
 }
