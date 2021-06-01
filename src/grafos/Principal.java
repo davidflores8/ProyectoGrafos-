@@ -37,6 +37,7 @@ public class Principal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -89,6 +90,15 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setText("Recolorear Aristas");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setText("Limpiar");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -134,7 +144,7 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem6);
 
-        jMenuItem8.setText("Buscar camino");
+        jMenuItem8.setText("Buscar ciclos en el grafo");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem8ActionPerformed(evt);
@@ -142,7 +152,7 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem8);
 
-        jMenuItem9.setText("Ciclos");
+        jMenuItem9.setText("Buscar camino ");
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem9ActionPerformed(evt);
@@ -272,6 +282,9 @@ public class Principal extends javax.swing.JFrame {
             Nodo nodo2 = obtenerNodo(n2);
             figuras.dibujarLinea(panel.getGraphics(), nodo1.getCoordenadaX(),nodo1.getCoordenadaY(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY());
             pares.add(new Par(nodo1, nodo2));
+            
+            figuras.dibujarCirculo(panel.getGraphics(), nodo1.getCoordenadaX(), nodo1.getCoordenadaY(), Integer.toString(nodo1.getIndice()));
+            figuras.dibujarCirculo(panel.getGraphics(), nodo2.getCoordenadaX(), nodo2.getCoordenadaY(), Integer.toString(nodo2.getIndice()));
         }
         else{
             JOptionPane.showMessageDialog(this, "Ya existe una arista en ambos vértices");
@@ -292,13 +305,43 @@ public class Principal extends javax.swing.JFrame {
             nodo2 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
             n2 = Integer.parseInt(nodo2);
         }
-        ArrayList lista = new ArrayList();
-        camino(n1,n2,new ArrayList());
+        ArrayList <Par> lista = new ArrayList();
+        int mayor=0;
+        int menor=0;
+        if(n1>n2){
+            mayor=n1;
+            menor=n2;
+        }
+        else{
+            mayor=n2;
+            menor=n1;
+        }
+        
+        camino(menor,mayor,lista);
+       // System.out.println("Lista - "+lista.toString());
+        System.out.println("");
+        System.out.println(" ");
+        buscarCamino(lista, n1,n2);
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         // TODO add your handling code here:
+        String nodo1=JOptionPane.showInputDialog(this,"Ingrese el índice del vértice: ");
+        int n1 = Integer.parseInt(nodo1);
+        while(!nodoExiste(n1)){
+            nodo1 = JOptionPane.showInputDialog(this,"Ingrese un nodo válido: ");
+            n1 = Integer.parseInt(nodo1);
+        }
+        ArrayList <Par> lista = new ArrayList();
+        camino(n1,n1,lista);
+        System.out.println("Lista = "+lista.toString());
+        buscarCiclo(lista,n1);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        recolorearAristas();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -336,17 +379,126 @@ public class Principal extends javax.swing.JFrame {
         });
     }
     
-    public boolean camino (int nodo1, int nodo2, ArrayList lista){
+    
+    
+    public void buscarCiclo(ArrayList <Par> lista, int inicio){
+        ArrayList<Nodo> nodos = new ArrayList();
+        nodos.add(buscarNodo(inicio));
+        int cont = 0;
+        Nodo actual;
+        actual = new Nodo(lista.get(cont).getNodo2().getIndice());
+        nodos.add(actual);  
+        while(!(validacionArista(inicio,nodos.get(cont).getIndice())) && cont<lista.size()-1){
+            cont++;
+            actual = new Nodo(lista.get(cont).getNodo2().getIndice());
+            nodos.add(actual);
+            
+        }
+        //System.out.println("Vertices finales - "+nodos.toString() );
+        for (int i = 0; i < nodos.size()-1; i++) {
+            Nodo primero = buscarNodo(nodos.get(i).getIndice());
+            Nodo segundo = buscarNodo(nodos.get(i+1).getIndice());
+            figuras.dibujarCamino(panel.getGraphics(), primero.getCoordenadaX(), primero.getCoordenadaY(), segundo.getCoordenadaX(), segundo.getCoordenadaY());
+        }
+        Nodo primero = buscarNodo(nodos.get(0).getIndice());
+        Nodo segundo = buscarNodo(nodos.get(nodos.size()-1).getIndice());
+        figuras.dibujarCamino(panel.getGraphics(), primero.getCoordenadaX(), primero.getCoordenadaY(), segundo.getCoordenadaX(), segundo.getCoordenadaY());
+    }
+    
+    
+    public void recolorearAristas(){
+        for (int i = 0; i < pares.size(); i++) {
+            Nodo primero = pares.get(i).getNodo1();
+            Nodo segundo = pares.get(i).getNodo2();
+            figuras.dibujarLinea(panel.getGraphics(), primero.getCoordenadaX(), primero.getCoordenadaY(), segundo.getCoordenadaX(), segundo.getCoordenadaY());
+        }
+    }
+            
+    
+    public void buscarCamino(ArrayList <Par> lista, int inicio, int fin){
+        
+       if(validacionArista(fin,lista.get(lista.size()-1).getNodo1().getIndice())==true){
+          // System.out.println("Nodo 1 "+lista.get(lista.size()-1).getNodo1().getIndice());
+           Nodo primero = buscarNodo(inicio);
+           Nodo segundo = buscarNodo(lista.get(lista.size()-1).getNodo1().getIndice());
+           Nodo tercero = buscarNodo(fin);
+           figuras.dibujarCamino(panel.getGraphics(), primero.getCoordenadaX(), primero.getCoordenadaY(), segundo.getCoordenadaX(), segundo.getCoordenadaY());
+           figuras.dibujarCamino(panel.getGraphics(), segundo.getCoordenadaX(), segundo.getCoordenadaY(), tercero.getCoordenadaX(), tercero.getCoordenadaY());
+       }
+       if(validacionArista(fin,lista.get(lista.size()-1).getNodo2().getIndice())==true){
+           
+           Nodo primero = buscarNodo(inicio);
+           Nodo segundo = buscarNodo(lista.get(lista.size()-1).getNodo2().getIndice());
+           Nodo tercero = buscarNodo(fin);
+           figuras.dibujarCamino(panel.getGraphics(), primero.getCoordenadaX(), primero.getCoordenadaY(), segundo.getCoordenadaX(), segundo.getCoordenadaY());
+           figuras.dibujarCamino(panel.getGraphics(), segundo.getCoordenadaX(), segundo.getCoordenadaY(), tercero.getCoordenadaX(), tercero.getCoordenadaY());
+       }
+       else{
+            try{
+                ArrayList <Nodo> vertices  = new ArrayList();
+                vertices.add(new Nodo(inicio));
+                int cont = 0;
+                Nodo actual;
+                actual = new Nodo(lista.get(cont).getNodo2().getIndice());
+                vertices.add(actual);
+                while(!(actual.getIndice()==fin)){
+                  //  System.out.println("Actual - "+actual.toString());
+                    cont++;
+                    actual = new Nodo(lista.get(cont).getNodo2().getIndice());
+                    vertices.add(actual);
+                    //System.out.println("Este es vertices "+vertices.toString());           
+                }
+
+                if((vertices.get(0).getIndice()== inicio) && (vertices.get(vertices.size()-1).getIndice()==fin)){
+                    for (int i = 0; i < vertices.size()-1; i++) {
+                        Nodo primero = buscarNodo(vertices.get(i).getIndice());
+                        Nodo segundo = buscarNodo(vertices.get(i+1).getIndice());
+                        figuras.dibujarCamino(panel.getGraphics(), primero.getCoordenadaX(), primero.getCoordenadaY(), segundo.getCoordenadaX(), segundo.getCoordenadaY());
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(this, "No hay un camino valido para los indices que ingresó");
+                }
+            }catch(Exception e){
+                
+            }
+       }
+        
+    }
+    
+    public Nodo buscarNodo(int indice){
+        Nodo nodo = new Nodo();
+        for (int i = 0; i < pares.size(); i++) {
+            if(pares.get(i).getNodo1().getIndice()==indice){
+                nodo = pares.get(i).getNodo1();
+                break;
+            }
+            if(pares.get(i).getNodo2().getIndice()==indice){
+                nodo = pares.get(i).getNodo2();
+                break;
+            }
+            
+        }
+        return nodo;
+    }
+    
+    
+    public boolean camino (int nodo1, int nodo2, ArrayList<Par> lista){
         if(nodo2<vertices.size() && nodo1<vertices.size()){
             for (int i = nodo1; i < vertices.size()-1; i++) {
-            if(validacionArista(nodo1, i+1)){
-                lista.add(new Par(new Nodo(nodo1), new Nodo(i+1)));
-                camino(i+1,i+2,lista);
+                if(validacionArista(nodo1, i+1)){
+                    lista.add(new Par(new Nodo(nodo1), new Nodo(i+1)));
+                    if(i+2==nodo2){
+                        i=1000;  
+                    }
+                    else{
+                        camino(i+1,i+2,lista);
+                    }
                 }
             }
             
         }
-        System.out.println(lista.toString());
+        //System.out.println("vez "+lista.toString());
         return false;
     }
     
@@ -425,6 +577,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

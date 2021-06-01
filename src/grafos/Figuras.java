@@ -37,7 +37,17 @@ public class Figuras {
         int xAux = 0; int yAux = 0; 
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
         BasicStroke stroke = new BasicStroke(2);
-        ((Graphics2D)g).setStroke(stroke);         
+        ((Graphics2D)g).setStroke(stroke);   
+        ((Graphics2D)g).setColor(Color.BLACK);
+        ((Graphics2D)g).drawLine(x1+10, y1+10, x2+10, y2+10);
+    }
+    
+    public void dibujarCamino (Graphics g, int x1, int y1, int x2, int y2){
+        int xAux = 0; int yAux = 0; 
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
+        BasicStroke stroke = new BasicStroke(2);
+        ((Graphics2D)g).setStroke(stroke);    
+        ((Graphics2D)g).setColor(Color.GREEN);
         ((Graphics2D)g).drawLine(x1+10, y1+10, x2+10, y2+10);
     }
     
